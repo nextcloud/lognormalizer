@@ -14,6 +14,8 @@
 
 namespace InterfaSys\LogNormalizer;
 
+use Throwable;
+
 /**
  * Converts any variable to a String
  *
@@ -252,7 +254,7 @@ class Normalizer {
 	 */
 	private function normalizeObject($data, $depth) {
 		if (is_object($data)) {
-			if ($data instanceof \Exception) {
+			if ($data instanceof Throwable) {
 				return $this->normalizeException($data);
 			}
 			// We don't need to go too deep in the recursion
@@ -275,11 +277,11 @@ class Normalizer {
 	/**
 	 * Converts an Exception to String
 	 *
-	 * @param \Exception $exception
+	 * @param Throwable $exception
 	 *
 	 * @return string[]
 	 */
-	private function normalizeException(\Exception $exception) {
+	private function normalizeException(Throwable $exception) {
 		$data = [
 			'class'   => get_class($exception),
 			'message' => $exception->getMessage(),
