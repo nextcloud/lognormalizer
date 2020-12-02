@@ -10,6 +10,10 @@
   "license": "AGPL-3.0",
   "authors": [
     {
+      "name": "Christoph Wurst",
+      "email": "christoph@winzerhof-wurst.at"
+    },
+    {
       "name": "Olivier Paroz",
       "email": "dev-lognormalizer@interfasys.ch",
       "role": "Developer",
