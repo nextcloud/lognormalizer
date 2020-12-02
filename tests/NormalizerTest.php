@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * interfaSys - lognormalizer
  *
@@ -34,14 +36,14 @@ class NormalizerTest extends TestCase {
 	/**
 	 * Using format() directly to make sure it doesn't modify strings
 	 */
-	public function testString() {
+	public function testString(): void {
 		$data = "Don't underestimate the power of the string [+*%&]";
 		$formatted = $this->normalizer->format($data);
 
 		self::assertEquals("Don't underestimate the power of the string [+*%&]", $formatted);
 	}
 
-	public function testBoolean() {
+	public function testBoolean(): void {
 		$data = true;
 		$normalized = $this->normalizer->normalize($data);
 
@@ -52,7 +54,7 @@ class NormalizerTest extends TestCase {
 		self::assertEquals('true', $formatted);
 	}
 
-	public function testFloat() {
+	public function testFloat(): void {
 		$data = 3.14413;
 		$normalized = $this->normalizer->normalize($data);
 		self::assertIsFloat($normalized);
@@ -63,7 +65,7 @@ class NormalizerTest extends TestCase {
 		self::assertEquals(3.14413, $formatted);
 	}
 
-	public function testInfinity() {
+	public function testInfinity(): void {
 		$data = [
 			'inf'  => INF,
 			'-inf' => -INF,
@@ -77,14 +79,14 @@ class NormalizerTest extends TestCase {
 		self::assertEquals('{"inf":"INF","-inf":"-INF"}', $formatted);
 	}
 
-	public function testNan() {
+	public function testNan(): void {
 		$data = acos(4);
 		$normalized = $this->normalizer->normalize($data);
 
 		self::assertEquals('NaN', $normalized);
 	}
 
-	public function testSimpleObject() {
+	public function testSimpleObject(): void {
 		$data = new TestFooNorm();
 		$normalized = $this->normalizer->normalize($data);
 
@@ -99,7 +101,7 @@ class NormalizerTest extends TestCase {
 		self::assertEquals($expectedString, $formatted);
 	}
 
-	public function testLongArray() {
+	public function testLongArray(): void {
 		$keys = range(0, 25);
 		$data = array_fill_keys($keys, 'normalizer');
 
@@ -112,7 +114,7 @@ class NormalizerTest extends TestCase {
 		self::assertEquals($expectedResult, $normalized);
 	}
 
-	public function testArrayWithObject() {
+	public function testArrayWithObject(): void {
 		$objectFoo = new TestFooNorm;
 		$data = [
 			'foo' => $objectFoo,
@@ -149,7 +151,7 @@ class NormalizerTest extends TestCase {
 		self::assertEquals($expectedString, $formatted);
 	}
 
-	public function testUnlimitedObjectRecursion() {
+	public function testUnlimitedObjectRecursion(): void {
 		$objectMain = new TestEmbeddedObjects;
 		$objectFoo = new TestFooNorm;
 		$objectBar = new TestBarNorm;
@@ -207,7 +209,7 @@ class NormalizerTest extends TestCase {
 		self::assertEquals($objectMainResult, $normalized);
 	}
 
-	public function testLimitedObjectRecursion() {
+	public function testLimitedObjectRecursion(): void {
 		$objectMain = new TestEmbeddedObjects;
 		$objectFoo = new TestFooNorm;
 		$objectBar = new TestBarNorm;
@@ -268,7 +270,7 @@ class NormalizerTest extends TestCase {
 		self::assertEquals($objectMainResult, $normalized);
 	}
 
-	public function testDate() {
+	public function testDate(): void {
 		$normalizer = new Normalizer(2, 20, 'Y-m-d');
 		$data = new \DateTime;
 		$normalized = $normalizer->normalize($data);
@@ -276,7 +278,7 @@ class NormalizerTest extends TestCase {
 		self::assertEquals(date('Y-m-d'), $normalized);
 	}
 
-	public function testResource() {
+	public function testResource(): void {
 		$data = fopen('php://memory', 'rb');
 		$resourceId = (int)$data;
 		$normalized = $this->normalizer->normalize($data);
@@ -284,7 +286,7 @@ class NormalizerTest extends TestCase {
 		self::assertEquals('[resource] Resource id #' . $resourceId, $normalized);
 	}
 
-	public function testFormatExceptions() {
+	public function testFormatExceptions(): void {
 		$e = new \LogicException('bar');
 		$e2 = new \RuntimeException('foo', 0, $e);
 		$data = [
@@ -308,7 +310,7 @@ class NormalizerTest extends TestCase {
 		);
 	}
 
-	public function testFormatExceptionWithPreviousThrowable() {
+	public function testFormatExceptionWithPreviousThrowable(): void {
 		$t = new TypeError("not a type error");
 		$e = new Exception("an exception", 13, $t);
 
@@ -337,7 +339,7 @@ class NormalizerTest extends TestCase {
 		self::assertTrue(isset($normalized['exception']['previous']));
 	}
 
-	public function testUnknown() {
+	public function testUnknown(): void {
 		$data = fopen('php://memory', 'rb');
 		fclose($data);
 		$normalized = $this->normalizer->normalize($data);
@@ -384,7 +386,7 @@ class TestEmbeddedObjects {
 		$this->methodOne();
 	}
 
-	public function methodOne() {
+	public function methodOne(): void {
 		$this->fooBar = $this->foo->foo . $this->bar->bar;
 	}
 }

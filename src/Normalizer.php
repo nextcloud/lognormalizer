@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * interfaSys - lognormalizer
  *
@@ -84,9 +87,9 @@ class Normalizer {
 	 * @param $data
 	 * @param int $depth
 	 *
-	 * @return string|array
+	 * @return mixed|array
 	 */
-	public function normalize($data, $depth = 0) {
+	public function normalize($data, ?int $depth = 0) {
 		$scalar = $this->normalizeScalar($data);
 		if (!is_array($scalar)) {
 			return $scalar;
@@ -117,7 +120,7 @@ class Normalizer {
 	 *
 	 * @return string|null
 	 */
-	public function convertToString($data) {
+	public function convertToString($data): ?string {
 		if (!is_string($data)) {
 			$data = @json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 			// Removing null byte and double slashes from object properties
@@ -160,7 +163,7 @@ class Normalizer {
 	 *
 	 * @return string|double
 	 */
-	private function normalizeFloat($data) {
+	private function normalizeFloat(float $data) {
 		if (is_infinite($data)) {
 			$postfix = 'INF';
 			if ($data < 0) {
@@ -186,7 +189,7 @@ class Normalizer {
 	 *
 	 * @return array|null
 	 */
-	private function normalizeTraversable($data, $depth = 0) {
+	private function normalizeTraversable($data, ?int $depth = 0): ?array {
 		if (is_array($data) || $data instanceof \Traversable) {
 			return $this->normalizeTraversableElement($data, $depth);
 		}
@@ -202,7 +205,7 @@ class Normalizer {
 	 *
 	 * @return array
 	 */
-	private function normalizeTraversableElement($data, $depth) {
+	private function normalizeTraversableElement($data, int $depth): array {
 		$maxObjectRecursion = $this->maxRecursionDepth;
 		$maxArrayItems = $this->maxArrayItems;
 		$count = 1;
@@ -232,7 +235,7 @@ class Normalizer {
 	 *
 	 * @return null|string
 	 */
-	private function normalizeDate($data) {
+	private function normalizeDate($data): ?string {
 		if ($data instanceof \DateTime) {
 			return $data->format($this->dateFormat);
 		}
@@ -250,9 +253,9 @@ class Normalizer {
 	 * @param mixed $data
 	 * @param int $depth
 	 *
-	 * @return array|null
+	 * @return array|string|null
 	 */
-	private function normalizeObject($data, $depth) {
+	private function normalizeObject($data, int $depth) {
 		if (is_object($data)) {
 			if ($data instanceof Throwable) {
 				return $this->normalizeException($data);
@@ -281,7 +284,7 @@ class Normalizer {
 	 *
 	 * @return string[]
 	 */
-	private function normalizeException(Throwable $exception) {
+	private function normalizeException(Throwable $exception): array {
 		$data = [
 			'class'   => get_class($exception),
 			'message' => $exception->getMessage(),
@@ -306,7 +309,7 @@ class Normalizer {
 	 *
 	 * @return string
 	 */
-	private function getObjetName($object) {
+	private function getObjetName($object): string {
 		return sprintf('[object] (%s)', get_class($object));
 	}
 
@@ -319,7 +322,7 @@ class Normalizer {
 	 *
 	 * @return string|null
 	 */
-	private function normalizeResource($data) {
+	private function normalizeResource($data): ?string {
 		if (is_resource($data)) {
 			return '[resource] ' . substr((string)$data, 0, 40);
 		}
