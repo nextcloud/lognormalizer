@@ -12,12 +12,12 @@
  * @copyright Jordi Boggiano 2014-2015
  */
 
-namespace InterfaSys\LogNormalizer;
+namespace Nextcloud\LogNormalizer;
 
 /**
  * Converts any variable to a String
  *
- * @package InterfaSys\LogNormalizer
+ * @package Nextcloud\LogNormalizer
  */
 class Normalizer {
 
@@ -74,10 +74,10 @@ class Normalizer {
 	/**
 	 * Converts Objects, Arrays, Dates and Exceptions to a String or an Array
 	 *
-	 * @uses InterfaSys\LogNormalizer\Normalizer::normalizeTraversable
-	 * @uses InterfaSys\LogNormalizer\Normalizer::normalizeDate
-	 * @uses InterfaSys\LogNormalizer\Normalizer::normalizeObject
-	 * @uses InterfaSys\LogNormalizer\Normalizer::normalizeResource
+	 * @uses Nextcloud\LogNormalizer\Normalizer::normalizeTraversable
+	 * @uses Nextcloud\LogNormalizer\Normalizer::normalizeDate
+	 * @uses Nextcloud\LogNormalizer\Normalizer::normalizeObject
+	 * @uses Nextcloud\LogNormalizer\Normalizer::normalizeResource
 	 *
 	 * @param $data
 	 * @param int $depth
@@ -177,7 +177,7 @@ class Normalizer {
 	/**
 	 * Returns an array containing normalized elements
 	 *
-	 * @used-by InterfaSys\LogNormalizer\Normalizer::normalize
+	 * @used-by Nextcloud\LogNormalizer\Normalizer::normalize
 	 *
 	 * @param $data
 	 * @param int $depth
@@ -224,7 +224,7 @@ class Normalizer {
 	/**
 	 * Converts a date to String
 	 *
-	 * @used-by InterfaSys\LogNormalizer\Normalizer::normalize
+	 * @used-by Nextcloud\LogNormalizer\Normalizer::normalize
 	 *
 	 * @param mixed $data
 	 *
@@ -243,7 +243,7 @@ class Normalizer {
 	 *
 	 * We don't convert to json here as we would double encode them
 	 *
-	 * @used-by InterfaSys\LogNormalizer\Normalizer::normalize
+	 * @used-by Nextcloud\LogNormalizer\Normalizer::normalize
 	 *
 	 * @param mixed $data
 	 * @param int $depth
@@ -311,7 +311,7 @@ class Normalizer {
 	/**
 	 * Converts a resource to a String
 	 *
-	 * @used-by InterfaSys\LogNormalizer\Normalizer::normalize
+	 * @used-by Nextcloud\LogNormalizer\Normalizer::normalize
 	 *
 	 * @param $data
 	 *
