@@ -13,14 +13,11 @@
  * @copyright Jordi Boggiano 2014-2015
  */
 
-namespace InterfaSys\LogNormalizer;
+namespace Nextcloud\LogNormalizer;
 
 use PHPUnit\Framework\TestCase;
 use function get_class;
 
-/**
- * @covers InterfaSys\LogNormalizer\Normalizer
- */
 class NormalizerTest extends TestCase {
 
 	/**
@@ -90,12 +87,12 @@ class NormalizerTest extends TestCase {
 		$normalized = $this->normalizer->normalize($data);
 
 		$expectedResult = [
-			'[object] (InterfaSys\\LogNormalizer\\TestFooNorm)' => ['foo' => 'foo']
+			'[object] (Nextcloud\\LogNormalizer\\TestFooNorm)' => ['foo' => 'foo']
 		];
 		self::assertEquals($expectedResult, $normalized);
 
 		$formatted = $this->normalizer->convertToString($normalized);
-		$expectedString = '{"[object] (InterfaSys\\LogNormalizer\\TestFooNorm)":{"foo":"foo"}}';
+		$expectedString = '{"[object] (Nextcloud\\LogNormalizer\\TestFooNorm)":{"foo":"foo"}}';
 
 		self::assertEquals($expectedString, $formatted);
 	}

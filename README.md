@@ -9,7 +9,7 @@ Based on the [Monolog](https://github.com/Seldaek/monolog) formatter/normalizer.
 ### Initialisation in your class
 
 ```php
-use InterfaSys\LogNormalizer\Normalizer;
+use Nextcloud\LogNormalizer\Normalizer;
 
 $normalizer = new Normalizer();
 ```
