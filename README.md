@@ -1,8 +1,4 @@
 ## Log Normalizer 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/interfasys/lognormalizer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/interfasys/lognormalizer/?branch=master)
-[![Code Climate](https://codeclimate.com/github/interfasys/lognormalizer/badges/gpa.svg)](https://codeclimate.com/github/interfasys/lognormalizer)
-[![Build Status](https://travis-ci.org/interfasys/lognormalizer.svg?branch=master)](https://travis-ci.org/interfasys/lognormalizer)
-[![Code Coverage](https://scrutinizer-ci.com/g/interfasys/lognormalizer/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/interfasys/lognormalizer/?branch=master)
 
 Parses variables and converts them to string so that they can be logged
 
