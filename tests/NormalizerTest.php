@@ -15,7 +15,9 @@
 
 namespace Nextcloud\LogNormalizer;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 use function get_class;
 
 class NormalizerTest extends TestCase {
@@ -304,6 +306,35 @@ class NormalizerTest extends TestCase {
 				]
 			], $normalized
 		);
+	}
+
+	public function testFormatExceptionWithPreviousThrowable() {
+		$t = new TypeError("not a type error");
+		$e = new Exception("an exception", 13, $t);
+
+		$normalized = $this->normalizer->normalize([
+			'exception' => $e,
+		]);
+
+		self::assertEquals(
+			[
+				'exception' => [
+					'class'   => get_class($e),
+					'message' => $e->getMessage(),
+					'code'    => $e->getCode(),
+					'file'    => $e->getFile() . ':' . $e->getLine(),
+					'trace'   => $e->getTraceAsString(),
+					'previous' => [
+						'class' => 'TypeError',
+						'message' => 'not a type error',
+						'code' => 0,
+						'file' => $t->getFile() . ':' . $t->getLine(),
+						'trace' => $t->getTraceAsString(),
+					]
+				]
+			], $normalized
+		);
+		self::assertTrue(isset($normalized['exception']['previous']));
 	}
 
 	public function testUnknown() {
