@@ -18,9 +18,11 @@ declare(strict_types=1);
 namespace Nextcloud\LogNormalizer;
 
 use Throwable;
+use function is_float;
+use function is_scalar;
 
 /**
- * Converts any variable to a String
+ * Converts any variable to a string
  *
  * @package Nextcloud\LogNormalizer
  */
@@ -32,17 +34,17 @@ class Normalizer {
 	private const SIMPLE_DATE = "Y-m-d H:i:s";
 
 	/**
-	 * @type int
+	 * @var int
 	 */
 	private $maxRecursionDepth;
 
 	/**
-	 * @type int
+	 * @var int
 	 */
 	private $maxArrayItems;
 
 	/**
-	 * @type string
+	 * @var string
 	 */
 	private $dateFormat;
 
@@ -77,21 +79,21 @@ class Normalizer {
 	}
 
 	/**
-	 * Converts Objects, Arrays, Dates and Exceptions to a String or an Array
+	 * Converts Objects, Arrays, Dates and Exceptions to a string or an Array
 	 *
 	 * @uses Nextcloud\LogNormalizer\Normalizer::normalizeTraversable
 	 * @uses Nextcloud\LogNormalizer\Normalizer::normalizeDate
 	 * @uses Nextcloud\LogNormalizer\Normalizer::normalizeObject
 	 * @uses Nextcloud\LogNormalizer\Normalizer::normalizeResource
 	 *
-	 * @param $data
+	 * @param mixed $data
 	 * @param int $depth
 	 *
 	 * @return mixed|array
 	 */
 	public function normalize($data, ?int $depth = 0) {
 		$scalar = $this->normalizeScalar($data);
-		if (!is_array($scalar)) {
+		if ($scalar !== null) {
 			return $scalar;
 		}
 		$decisionArray = [
@@ -135,25 +137,24 @@ class Normalizer {
 	 *
 	 * We're returning an array here to detect failure because null is a scalar and so is false
 	 *
-	 * @param $data
+	 * @param mixed $data
 	 *
-	 * @return mixed
+	 * @return string|mixed|null
 	 */
 	private function normalizeScalar($data) {
-		if (null === $data || is_scalar($data)) {
-			/*// utf8_encode only works for Latin1 so we rely on mbstring
-			if (is_string($data)) {
-				$data = mb_convert_encoding($data, "UTF-8");
-			}*/
+		if ($data === null) {
+			return null;
+		}
 
-			if (is_float($data)) {
-				$data = $this->normalizeFloat($data);
-			}
+		if (is_float($data)) {
+			return $this->normalizeFloat($data);
+		}
 
+		if (is_scalar($data)) {
 			return $data;
 		}
 
-		return [];
+		return null;
 	}
 
 	/**
@@ -161,7 +162,7 @@ class Normalizer {
 	 *
 	 * @param float $data
 	 *
-	 * @return string|double
+	 * @return string|float
 	 */
 	private function normalizeFloat(float $data) {
 		if (is_infinite($data)) {
@@ -169,11 +170,11 @@ class Normalizer {
 			if ($data < 0) {
 				$postfix = '-' . $postfix;
 			}
-			$data = $postfix;
-		} else {
-			if (is_nan($data)) {
-				$data = 'NaN';
-			}
+			return $postfix;
+		}
+
+		if (is_nan($data)) {
+			return 'NaN';
 		}
 
 		return $data;
@@ -184,12 +185,12 @@ class Normalizer {
 	 *
 	 * @used-by Nextcloud\LogNormalizer\Normalizer::normalize
 	 *
-	 * @param $data
+	 * @param mixed $data
 	 * @param int $depth
 	 *
 	 * @return array|null
 	 */
-	private function normalizeTraversable($data, ?int $depth = 0): ?array {
+	private function normalizeTraversable($data, int $depth = 0): ?array {
 		if (is_array($data) || $data instanceof \Traversable) {
 			return $this->normalizeTraversableElement($data, $depth);
 		}
@@ -200,7 +201,7 @@ class Normalizer {
 	/**
 	 * Converts each element of a traversable variable to String
 	 *
-	 * @param $data
+	 * @param mixed $data
 	 * @param int $depth
 	 *
 	 * @return array
@@ -253,7 +254,7 @@ class Normalizer {
 	 * @param mixed $data
 	 * @param int $depth
 	 *
-	 * @return array|string|null
+	 * @return mixed[]|string|null
 	 */
 	private function normalizeObject($data, int $depth) {
 		if (is_object($data)) {
@@ -278,11 +279,11 @@ class Normalizer {
 	}
 
 	/**
-	 * Converts an Exception to String
+	 * Converts an Exception to a string array
 	 *
 	 * @param Throwable $exception
 	 *
-	 * @return string[]
+	 * @return mixed[]
 	 */
 	private function normalizeException(Throwable $exception): array {
 		$data = [
@@ -305,20 +306,20 @@ class Normalizer {
 	/**
 	 * Formats the output of the object parsing
 	 *
-	 * @param $object
+	 * @param object $object
 	 *
 	 * @return string
 	 */
-	private function getObjetName($object): string {
+	private function getObjetName(object $object): string {
 		return sprintf('[object] (%s)', get_class($object));
 	}
 
 	/**
-	 * Converts a resource to a String
+	 * Converts a resource to a string
 	 *
 	 * @used-by Nextcloud\LogNormalizer\Normalizer::normalize
 	 *
-	 * @param $data
+	 * @param resource|mixed $data
 	 *
 	 * @return string|null
 	 */
