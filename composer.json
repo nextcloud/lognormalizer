@@ -1,5 +1,5 @@
 {
-  "name": "interfasys/lognormalizer",
+  "name": "nextcloud/lognormalizer",
   "type": "library",
   "description": "Parses variables and converts them to string so that they can be logged",
   "keywords": [
