@@ -29,7 +29,7 @@ class Normalizer {
 	/**
 	 * @type string
 	 */
-	const SIMPLE_DATE = "Y-m-d H:i:s";
+	private const SIMPLE_DATE = "Y-m-d H:i:s";
 
 	/**
 	 * @type int
@@ -329,5 +329,4 @@ class Normalizer {
 
 		return null;
 	}
-
 }
