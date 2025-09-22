@@ -237,7 +237,7 @@ class Normalizer {
 	 * @return null|string
 	 */
 	private function normalizeDate($data): ?string {
-		if ($data instanceof \DateTime) {
+		if ($data instanceof \DateTimeInterface) {
 			return $data->format($this->dateFormat);
 		}
 
