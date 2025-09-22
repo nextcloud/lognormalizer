@@ -272,7 +272,15 @@ class NormalizerTest extends TestCase {
 
 	public function testDate(): void {
 		$normalizer = new Normalizer(2, 20, 'Y-m-d');
-		$data = new \DateTime;
+		$data = new \DateTime();
+		$normalized = $normalizer->normalize($data);
+
+		self::assertEquals(date('Y-m-d'), $normalized);
+	}
+
+	public function testDateImmutable(): void {
+		$normalizer = new Normalizer(2, 20, 'Y-m-d');
+		$data = new \DateTimeImmutable();
 		$normalized = $normalizer->normalize($data);
 
 		self::assertEquals(date('Y-m-d'), $normalized);
