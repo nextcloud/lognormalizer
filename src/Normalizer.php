@@ -25,13 +25,14 @@ use function is_scalar;
  * Converts any variable to a string
  *
  * @package Nextcloud\LogNormalizer
+ * @api
  */
 class Normalizer {
 
 	/**
 	 * @type string
 	 */
-	private const SIMPLE_DATE = "Y-m-d H:i:s";
+	private const SIMPLE_DATE = 'Y-m-d H:i:s';
 
 	/**
 	 * @var int
@@ -51,7 +52,7 @@ class Normalizer {
 	/**
 	 * @param int $maxRecursionDepth The maximum depth at which to go when inspecting objects
 	 * @param int $maxArrayItems The maximum number of Array elements you want to show, when
-	 *     parsing an array
+	 *                           parsing an array
 	 * @param null|string $dateFormat The format to apply to dates
 	 */
 	public function __construct($maxRecursionDepth = 4, $maxArrayItems = 20, $dateFormat = null) {
@@ -98,9 +99,9 @@ class Normalizer {
 		}
 		$decisionArray = [
 			'normalizeTraversable' => [$data, $depth],
-			'normalizeDate'        => [$data],
-			'normalizeObject'      => [$data, $depth],
-			'normalizeResource'    => [$data],
+			'normalizeDate' => [$data],
+			'normalizeObject' => [$data, $depth],
+			'normalizeResource' => [$data],
 		];
 
 		foreach ($decisionArray as $functionName => $arguments) {
@@ -126,7 +127,7 @@ class Normalizer {
 		if (!is_string($data)) {
 			$data = @json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 			// Removing null byte and double slashes from object properties
-			$data = str_replace(['\\u0000', '\\\\'], ["", "\\"], $data);
+			$data = str_replace(['\\u0000', '\\\\'], ['', '\\'], $data);
 		}
 
 		return $data;
@@ -214,8 +215,8 @@ class Normalizer {
 		$nextDepth = $depth + 1;
 		foreach ($data as $key => $value) {
 			if ($count >= $maxArrayItems) {
-				$normalized['...'] =
-					'Over ' . $maxArrayItems . ' items, aborting normalization';
+				$normalized['...']
+					= 'Over ' . $maxArrayItems . ' items, aborting normalization';
 				break;
 			}
 			$count++;
@@ -287,10 +288,10 @@ class Normalizer {
 	 */
 	private function normalizeException(Throwable $exception): array {
 		$data = [
-			'class'   => get_class($exception),
+			'class' => get_class($exception),
 			'message' => $exception->getMessage(),
-			'code'    => $exception->getCode(),
-			'file'    => $exception->getFile() . ':' . $exception->getLine(),
+			'code' => $exception->getCode(),
+			'file' => $exception->getFile() . ':' . $exception->getLine(),
 		];
 		$trace = $exception->getTraceAsString();
 		$data['trace'] = $trace;
