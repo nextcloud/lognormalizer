@@ -30,9 +30,9 @@
     "php": ">=7.3.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "8.*",
-    "psalm/phar": "^4.2",
-    "nextcloud/coding-standard": "^1.4.0"
+    "phpunit/phpunit": "^10.5",
+    "nextcloud/coding-standard": "^1.4",
+    "vimeo/psalm": "^6.13"
   },
   "autoload": {
     "psr-4": {
@@ -41,8 +41,10 @@
   },
   "scripts": {
     "test": "phpunit -c phpunit.xml",
+    "lint": "find . -name \\*.php -not -path './vendor/*' -not -path './vendor-bin/*' -print0 | xargs -0 -n1 php -l",
     "cs:check": "php-cs-fixer fix --dry-run --diff",
     "cs:fix": "php-cs-fixer fix",
-    "psalm": "psalm.phar"
+    "psalm": "psalm",
+    "psalm:update-baseline": "psalm --threads=1 --update-baseline --set-baseline=tests/psalm-baseline.xml"
   }
 }
