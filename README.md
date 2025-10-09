@@ -1,3 +1,8 @@
+<!--
+  - SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-FileCopyrightText: 2015 Olivier Paroz <dev-lognormalizer@interfasys.ch>
+  - SPDX-License-Identifier: CC0-1.0
+-->
 ## Log Normalizer 
 
 Parses variables and converts them to string so that they can be logged
