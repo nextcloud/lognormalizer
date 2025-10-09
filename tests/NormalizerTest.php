@@ -3,16 +3,10 @@
 declare(strict_types=1);
 
 /**
- * interfaSys - lognormalizer
- *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
- *
- * @author Olivier Paroz <dev-lognormalizer@interfasys.ch>
- * @author Jordi Boggiano <j.boggiano@seld.be>
- *
- * @copyright Olivier Paroz 2015
- * @copyright Jordi Boggiano 2014-2015
+ * SPDX-FileCopyrightText: 2016-2025 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2015 Olivier Paroz <dev-lognormalizer@interfasys.ch>
+ * SPDX-FileCopyrightText: 2014-2015 Jordi Boggiano <j.boggiano@seld.be>
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
 namespace Nextcloud\LogNormalizer;
