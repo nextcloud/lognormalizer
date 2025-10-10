@@ -4,6 +4,12 @@
     <PossiblyFalseArgument>
       <code><![CDATA[$data]]></code>
     </PossiblyFalseArgument>
+    <PossiblyFalseOperand>
+      <code><![CDATA[substr((string)$data, 0, 40)]]></code>
+    </PossiblyFalseOperand>
+    <UndefinedAttributeClass>
+      <code><![CDATA[\NoDiscard]]></code>
+    </UndefinedAttributeClass>
     <UnusedMethod>
       <code><![CDATA[normalizeDate]]></code>
       <code><![CDATA[normalizeObject]]></code>

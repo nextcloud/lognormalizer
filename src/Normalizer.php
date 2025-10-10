@@ -60,17 +60,15 @@ class Normalizer {
 	}
 
 	/**
-	 * Normalises the variable, JSON encodes it if needed and cleans up the result
+	 * Normalizes the variable, JSON encodes it if needed and cleans up the result
 	 *
 	 * @param mixed $data
-	 *
 	 * @return string|null
 	 */
-	public function format(&$data) {
+	#[\NoDiscard]
+	public function format($data): ?string {
 		$data = $this->normalize($data);
-		$data = $this->convertToString($data);
-
-		return $data;
+		return $this->convertToString($data);
 	}
 
 	/**
