@@ -61,7 +61,7 @@ class NormalizerTest extends TestCase {
 
 	public function testInfinity(): void {
 		$data = [
-			'inf'  => INF,
+			'inf' => INF,
 			'-inf' => -INF,
 		];
 		$normalized = $this->normalizer->normalize($data);
@@ -128,9 +128,9 @@ class NormalizerTest extends TestCase {
 		self::assertEquals($objectFooResult, $normalized['foo']);
 
 		$expectedResult = [
-			"foo" => $objectFooResult,
-			"baz" => [
-				"quz",
+			'foo' => $objectFooResult,
+			'baz' => [
+				'quz',
 				true
 			]
 		];
@@ -139,8 +139,8 @@ class NormalizerTest extends TestCase {
 		$formatted = $this->normalizer->convertToString($normalized);
 		$objectFooName = get_class($objectFoo);
 		$objectFooResult = '{"[object] (' . $objectFooName . ')":{"foo":"foo"}}';
-		$expectedString =
-			'{"foo":' . $objectFooResult . ',"baz":["quz",true]}';
+		$expectedString
+			= '{"foo":' . $objectFooResult . ',"baz":["quz",true]}';
 
 		self::assertEquals($expectedString, $formatted);
 	}
@@ -193,9 +193,9 @@ class NormalizerTest extends TestCase {
 
 		$objectMainResult = [
 			'[object] (' . $objectMainName . ')' => [
-				'foo'    => $objectFooResult,
-				'bar'    => $objectBarResult,
-				'baz'    => $objectBazResult,
+				'foo' => $objectFooResult,
+				'bar' => $objectBarResult,
+				'baz' => $objectBazResult,
 				'fooBar' => 'foobar'
 			]
 		];
@@ -254,9 +254,9 @@ class NormalizerTest extends TestCase {
 
 		$objectMainResult = [
 			'[object] (' . $objectMainName . ')' => [
-				'foo'    => $objectFooResult,
-				'bar'    => $objectBarResult,
-				'baz'    => $objectBazResult,
+				'foo' => $objectFooResult,
+				'bar' => $objectBarResult,
+				'baz' => $objectBazResult,
 				'fooBar' => 'foobar'
 			]
 		];
@@ -302,19 +302,19 @@ class NormalizerTest extends TestCase {
 		self::assertEquals(
 			[
 				'exception' => [
-					'class'   => get_class($e2),
+					'class' => get_class($e2),
 					'message' => $e2->getMessage(),
-					'code'    => $e2->getCode(),
-					'file'    => $e2->getFile() . ':' . $e2->getLine(),
-					'trace'   => $e->getTraceAsString(),
+					'code' => $e2->getCode(),
+					'file' => $e2->getFile() . ':' . $e2->getLine(),
+					'trace' => $e->getTraceAsString(),
 				]
 			], $normalized
 		);
 	}
 
 	public function testFormatExceptionWithPreviousThrowable(): void {
-		$t = new TypeError("not a type error");
-		$e = new Exception("an exception", 13, $t);
+		$t = new TypeError('not a type error');
+		$e = new Exception('an exception', 13, $t);
 
 		$normalized = $this->normalizer->normalize([
 			'exception' => $e,
@@ -323,11 +323,11 @@ class NormalizerTest extends TestCase {
 		self::assertEquals(
 			[
 				'exception' => [
-					'class'   => get_class($e),
+					'class' => get_class($e),
 					'message' => $e->getMessage(),
-					'code'    => $e->getCode(),
-					'file'    => $e->getFile() . ':' . $e->getLine(),
-					'trace'   => $e->getTraceAsString(),
+					'code' => $e->getCode(),
+					'file' => $e->getFile() . ':' . $e->getLine(),
+					'trace' => $e->getTraceAsString(),
 					'previous' => [
 						'class' => 'TypeError',
 						'message' => 'not a type error',
