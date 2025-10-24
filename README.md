@@ -11,7 +11,7 @@ Based on the [Monolog](https://github.com/Seldaek/monolog) formatter/normalizer.
 
 ## How to use
 
-### Initialisation in your class
+### Initialization in your class
 
 ```php
 use Nextcloud\LogNormalizer\Normalizer;
