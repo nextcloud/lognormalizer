@@ -348,6 +348,13 @@ class NormalizerTest extends TestCase {
 
 		self::assertEquals('[unknown(' . gettype($data) . ')]', $normalized);
 	}
+
+	public function testFormatBrokenJSON(): void {
+		$data = ['payload' => ['bad' => "\xC3\x28", 'other' => 'data']];
+		$normalized = $this->normalizer->format($data);
+		self::assertIsString($normalized);
+		self::assertSame('{"payload":{"bad":null,"other":"data"}}', $normalized);
+	}
 }
 
 class TestFooNorm {
