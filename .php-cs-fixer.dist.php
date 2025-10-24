@@ -15,5 +15,6 @@ $config = new Config();
 $config
 	->getFinder()
 	->notPath('vendor')
-	->in('src');
+	->in('src')
+	->in('tests');
 return $config;
