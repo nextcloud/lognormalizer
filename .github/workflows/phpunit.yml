@@ -36,7 +36,7 @@ jobs:
 
       - name: Install libzmq3-dev as a test
         run: |
-          apt-get install -y libzmq3-dev
+          sudo apt-get install -y libzmq3-dev
 
       - name: Set up php ${{ matrix.php-versions }}
         uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
