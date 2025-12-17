@@ -17,11 +17,7 @@ use TypeError;
 use function get_class;
 
 class NormalizerTest extends TestCase {
-
-	/**
-	 * @var Normalizer
-	 */
-	protected $normalizer;
+	protected Normalizer $normalizer;
 
 	protected function setUp(): void {
 		$this->normalizer = new Normalizer();
@@ -37,6 +33,13 @@ class NormalizerTest extends TestCase {
 		self::assertEquals("Don't underestimate the power of the string [+*%&]", $formatted);
 	}
 
+	public function testEnumString(): void {
+		$data = TestEnumString::BAR;
+		$formatted = $this->normalizer->format($data);
+
+		self::assertEquals('bar', $formatted);
+	}
+
 	public function testBoolean(): void {
 		$data = true;
 		$normalized = $this->normalizer->normalize($data);
@@ -46,6 +49,13 @@ class NormalizerTest extends TestCase {
 		$formatted = $this->normalizer->convertToString($normalized);
 
 		self::assertEquals('true', $formatted);
+	}
+
+	public function testEnumInt(): void {
+		$data = TestEnum::BAR;
+		$formatted = $this->normalizer->format($data);
+
+		self::assertEquals(2, $formatted);
 	}
 
 	public function testFloat(): void {
@@ -261,6 +271,16 @@ class NormalizerTest extends TestCase {
 
 class TestFooNorm {
 	public $foo = 'foo';
+}
+
+enum TestEnum: int {
+	case FOO = 1;
+	case BAR = 2;
+}
+
+enum TestEnumString: string {
+	case FOO = 'foo';
+	case BAR = 'bar';
 }
 
 class TestBarNorm {

@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace Nextcloud\LogNormalizer;
 
+use DateTimeInterface;
 use Throwable;
+use UnitEnum;
 use function is_float;
 use function is_scalar;
 
@@ -62,6 +64,9 @@ class Normalizer {
 	/**
 	 * Normalizes the variable, JSON encodes it if needed and cleans up the result
 	 *
+	 * Properly supported are bool|int|float|string|resource|UnitEnum|Throwable|DateTimeInterface
+	 * as well as nested-arrays and Traversable of those types
+	 *
 	 * @param mixed $data
 	 * @return string|null
 	 */
@@ -90,8 +95,12 @@ class Normalizer {
 			return $this->normalizeException($data, $depth);
 		}
 
-		if ($data instanceof \DateTimeInterface) {
+		if ($data instanceof DateTimeInterface) {
 			return $data->format($this->dateFormat);
+		}
+
+		if ($data instanceof UnitEnum) {
+			return $data->value;
 		}
 
 		if (is_resource($data)) {
