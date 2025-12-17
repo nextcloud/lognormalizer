@@ -24,26 +24,8 @@ use function is_scalar;
  * @api
  */
 class Normalizer {
-
-	/**
-	 * @type string
-	 */
 	private const SIMPLE_DATE = 'Y-m-d H:i:s';
-
-	/**
-	 * @var int
-	 */
-	private $maxRecursionDepth;
-
-	/**
-	 * @var int
-	 */
-	private $maxArrayItems;
-
-	/**
-	 * @var string
-	 */
-	private $dateFormat;
+	private readonly string $dateFormat;
 
 	/**
 	 * @param int $maxRecursionDepth The maximum depth at which to go when inspecting objects
@@ -51,14 +33,12 @@ class Normalizer {
 	 *                           parsing an array
 	 * @param null|string $dateFormat The format to apply to dates
 	 */
-	public function __construct(int $maxRecursionDepth = 4, int $maxArrayItems = 20, ?string $dateFormat = null) {
-		$this->maxRecursionDepth = $maxRecursionDepth;
-		$this->maxArrayItems = $maxArrayItems;
-		if ($dateFormat !== null) {
-			$this->dateFormat = $dateFormat;
-		} else {
-			$this->dateFormat = static::SIMPLE_DATE;
-		}
+	public function __construct(
+		private readonly int $maxRecursionDepth = 4,
+		private readonly int $maxArrayItems = 20,
+		?string $dateFormat = null,
+	) {
+		$this->dateFormat = $dateFormat ?? static::SIMPLE_DATE;
 	}
 
 	/**
@@ -71,7 +51,7 @@ class Normalizer {
 	 * @return string|null
 	 */
 	#[\NoDiscard]
-	public function format($data): ?string {
+	public function format(mixed $data): ?string {
 		$data = $this->normalize($data);
 		return $this->convertToString($data);
 	}
@@ -82,9 +62,9 @@ class Normalizer {
 	 * @param mixed $data
 	 * @param ?int $depth
 	 *
-	 * @return string|array
+	 * @return mixed
 	 */
-	public function normalize($data, ?int $depth = 0) {
+	public function normalize(mixed $data, ?int $depth = 0): mixed {
 		$depth = $depth ?? 0;
 		$scalar = $this->normalizeScalar($data);
 		if ($scalar !== null) {
@@ -118,12 +98,8 @@ class Normalizer {
 	 * JSON encodes data which isn't already a string and cleans up the result
 	 *
 	 * @todo: could maybe do a better job removing slashes
-	 *
-	 * @param mixed $data
-	 *
-	 * @return string|null
 	 */
-	public function convertToString($data): ?string {
+	public function convertToString(mixed $data): ?string {
 		if (!is_string($data)) {
 			$data = @json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PARTIAL_OUTPUT_ON_ERROR);
 			// Removing null byte and double slashes from object properties
@@ -135,14 +111,8 @@ class Normalizer {
 
 	/**
 	 * Returns various, filtered, scalar elements
-	 *
-	 * We're returning an array here to detect failure because null is a scalar and so is false
-	 *
-	 * @param mixed $data
-	 *
-	 * @return string|mixed|null
 	 */
-	private function normalizeScalar($data) {
+	private function normalizeScalar(mixed $data): mixed {
 		if ($data === null) {
 			return null;
 		}
@@ -160,12 +130,8 @@ class Normalizer {
 
 	/**
 	 * Normalizes infinite and trigonometric floats
-	 *
-	 * @param float $data
-	 *
-	 * @return string|float
 	 */
-	private function normalizeFloat(float $data) {
+	private function normalizeFloat(float $data): string|float {
 		if (is_infinite($data)) {
 			$postfix = 'INF';
 			if ($data < 0) {
@@ -183,13 +149,8 @@ class Normalizer {
 
 	/**
 	 * Converts each element of a traversable variable to String
-	 *
-	 * @param mixed $data
-	 * @param int $depth
-	 *
-	 * @return array
 	 */
-	private function normalizeTraversableElement($data, int $depth): array {
+	private function normalizeTraversableElement(iterable $data, int $depth): array {
 		$maxObjectRecursion = $this->maxRecursionDepth;
 		$maxArrayItems = $this->maxArrayItems;
 		$count = 1;
@@ -212,10 +173,6 @@ class Normalizer {
 
 	/**
 	 * Converts an Exception to a string array
-	 *
-	 * @param Throwable $exception
-	 *
-	 * @return mixed[]
 	 */
 	private function normalizeException(Throwable $exception, int $depth): array {
 		$data = [

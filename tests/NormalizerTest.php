@@ -19,6 +19,7 @@ use function get_class;
 class NormalizerTest extends TestCase {
 	protected Normalizer $normalizer;
 
+	#[\Override]
 	protected function setUp(): void {
 		$this->normalizer = new Normalizer();
 	}
