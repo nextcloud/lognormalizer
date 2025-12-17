@@ -7,7 +7,7 @@
     "normalizer"
   ],
   "homepage": "https://github.com/interfasys/lognormalizer",
-  "license": "AGPL-3.0",
+  "license": "AGPL-3.0-or-later",
   "authors": [
     {
       "name": "Christoph Wurst",
@@ -27,12 +27,13 @@
   ],
   "require": {
     "ext-json": "*",
-    "php": ">=7.3.0"
+    "php": ">=8.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^10.5",
     "nextcloud/coding-standard": "^1.4",
-    "vimeo/psalm": "^6.14"
+    "vimeo/psalm": "^6.14",
+    "symfony/polyfill-php85": "^1.33"
   },
   "autoload": {
     "psr-4": {
@@ -40,7 +41,7 @@
     }
   },
   "scripts": {
-    "test": "phpunit -c phpunit.xml --color",
+    "test": "phpunit -c phpunit.xml --color --display-phpunit-deprecations --display-deprecations",
     "lint": "find . -name \\*.php -not -path './vendor/*' -not -path './vendor-bin/*' -print0 | xargs -0 -n1 php -l",
     "cs:check": "php-cs-fixer fix --dry-run --diff",
     "cs:fix": "php-cs-fixer fix",
