@@ -49,7 +49,7 @@ class Normalizer {
 	 *                           parsing an array
 	 * @param null|string $dateFormat The format to apply to dates
 	 */
-	public function __construct($maxRecursionDepth = 4, $maxArrayItems = 20, $dateFormat = null) {
+	public function __construct(int $maxRecursionDepth = 4, int $maxArrayItems = 20, ?string $dateFormat = null) {
 		$this->maxRecursionDepth = $maxRecursionDepth;
 		$this->maxArrayItems = $maxArrayItems;
 		if ($dateFormat !== null) {
