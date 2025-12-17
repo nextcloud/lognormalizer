@@ -80,21 +80,6 @@ class NormalizerTest extends TestCase {
 		self::assertEquals('NaN', $normalized);
 	}
 
-	public function testSimpleObject(): void {
-		$data = new TestFooNorm();
-		$normalized = $this->normalizer->normalize($data);
-
-		$expectedResult = [
-			'[object] (Nextcloud\\LogNormalizer\\TestFooNorm)' => ['foo' => 'foo']
-		];
-		self::assertEquals($expectedResult, $normalized);
-
-		$formatted = $this->normalizer->convertToString($normalized);
-		$expectedString = '{"[object] (Nextcloud\\LogNormalizer\\TestFooNorm)":{"foo":"foo"}}';
-
-		self::assertEquals($expectedString, $formatted);
-	}
-
 	public function testLongArray(): void {
 		$keys = range(0, 25);
 		$data = array_fill_keys($keys, 'normalizer');
@@ -108,10 +93,9 @@ class NormalizerTest extends TestCase {
 		self::assertEquals($expectedResult, $normalized);
 	}
 
-	public function testArrayWithObject(): void {
-		$objectFoo = new TestFooNorm;
+	public function testArrayWithMixed(): void {
 		$data = [
-			'foo' => $objectFoo,
+			'foo' => 123,
 			'baz' => [
 				'quz',
 				true
@@ -120,15 +104,8 @@ class NormalizerTest extends TestCase {
 
 		$normalized = $this->normalizer->normalize($data);
 
-		$objectFooName = get_class($objectFoo);
-		$objectFooResult = [
-			'[object] (' . $objectFooName . ')' => ['foo' => 'foo']
-		];
-
-		self::assertEquals($objectFooResult, $normalized['foo']);
-
 		$expectedResult = [
-			'foo' => $objectFooResult,
+			'foo' => 123,
 			'baz' => [
 				'quz',
 				true
@@ -137,131 +114,9 @@ class NormalizerTest extends TestCase {
 		self::assertEquals($expectedResult, $normalized);
 
 		$formatted = $this->normalizer->convertToString($normalized);
-		$objectFooName = get_class($objectFoo);
-		$objectFooResult = '{"[object] (' . $objectFooName . ')":{"foo":"foo"}}';
-		$expectedString
-			= '{"foo":' . $objectFooResult . ',"baz":["quz",true]}';
+		$expectedString = '{"foo":123,"baz":["quz",true]}';
 
 		self::assertEquals($expectedString, $formatted);
-	}
-
-	public function testUnlimitedObjectRecursion(): void {
-		$objectMain = new TestEmbeddedObjects;
-		$objectFoo = new TestFooNorm;
-		$objectBar = new TestBarNorm;
-		$objectBaz = new TestBazNorm;
-
-		$data = $objectMain;
-		$normalizer = new Normalizer(20, 20, 'Y-m-d');
-		$normalized = $normalizer->normalize($data);
-
-		$objectMainName = get_class($objectMain);
-		$objectFooName = get_class($objectFoo);
-		$objectBarName = get_class($objectBar);
-		$objectBazName = get_class($objectBaz);
-
-		$objectFooResult = [
-			'[object] (' . $objectFooName . ')' => ['foo' => 'foo']
-		];
-
-		self::assertEquals(
-			$objectFooResult, $normalized['[object] (' . $objectMainName . ')']['foo']
-		);
-
-		$objectBarResult = [
-			'[object] (' . $objectBarName . ')' => [
-				'foo' => $objectFooResult,
-				'bar' => 'bar'
-			]
-		];
-
-		self::assertEquals(
-			$objectBarResult, $normalized['[object] (' . $objectMainName . ')']['bar']
-		);
-
-		$objectBazResult = [
-			'[object] (' . $objectBazName . ')' => [
-				'foo' => $objectFooResult,
-				'bar' => $objectBarResult,
-				'baz' => 'baz'
-			]
-		];
-
-		self::assertEquals(
-			$objectBazResult, $normalized['[object] (' . $objectMainName . ')']['baz']
-		);
-
-		$objectMainResult = [
-			'[object] (' . $objectMainName . ')' => [
-				'foo' => $objectFooResult,
-				'bar' => $objectBarResult,
-				'baz' => $objectBazResult,
-				'fooBar' => 'foobar'
-			]
-		];
-
-		self::assertEquals($objectMainResult, $normalized);
-	}
-
-	public function testLimitedObjectRecursion(): void {
-		$objectMain = new TestEmbeddedObjects;
-		$objectFoo = new TestFooNorm;
-		$objectBar = new TestBarNorm;
-		$objectBaz = new TestBazNorm;
-
-		$data = $objectMain;
-		$normalizer = new Normalizer(4, 20, 'Y-m-d');
-		$normalized = $normalizer->normalize($data);
-
-		$objectMainName = get_class($objectMain);
-		$objectFooName = get_class($objectFoo);
-		$objectBarName = get_class($objectBar);
-		$objectBazName = get_class($objectBaz);
-
-		$objectFooResult = [
-			'[object] (' . $objectFooName . ')' => ['foo' => 'foo']
-		];
-
-		self::assertEquals(
-			$objectFooResult, $normalized['[object] (' . $objectMainName . ')']['foo']
-		);
-
-		// Already reaching the default limit
-		$objectBarResult = [
-			'[object] (' . $objectBarName . ')' => [
-				'foo' => '[object] (' . $objectFooName . ')',
-				'bar' => 'bar'
-			]
-		];
-
-		self::assertEquals(
-			$objectBarResult, $normalized['[object] (' . $objectMainName . ')']['bar']
-		);
-
-
-		// At this stage, we can't inspect deeper objects
-		$objectBazResult = [
-			'[object] (' . $objectBazName . ')' => [
-				'foo' => '[object] (' . $objectFooName . ')',
-				'bar' => '[object] (' . $objectBarName . ')',
-				'baz' => 'baz'
-			]
-		];
-
-		self::assertEquals(
-			$objectBazResult, $normalized['[object] (' . $objectMainName . ')']['baz']
-		);
-
-		$objectMainResult = [
-			'[object] (' . $objectMainName . ')' => [
-				'foo' => $objectFooResult,
-				'bar' => $objectBarResult,
-				'baz' => $objectBazResult,
-				'fooBar' => 'foobar'
-			]
-		];
-
-		self::assertEquals($objectMainResult, $normalized);
 	}
 
 	public function testDate(): void {

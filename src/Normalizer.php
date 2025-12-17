@@ -72,17 +72,12 @@ class Normalizer {
 	}
 
 	/**
-	 * Converts Objects, Arrays, Dates and Exceptions to a string or an Array
-	 *
-	 * @uses Nextcloud\LogNormalizer\Normalizer::normalizeTraversable
-	 * @uses Nextcloud\LogNormalizer\Normalizer::normalizeDate
-	 * @uses Nextcloud\LogNormalizer\Normalizer::normalizeObject
-	 * @uses Nextcloud\LogNormalizer\Normalizer::normalizeResource
+	 * Converts Arrays, Dates and Exceptions to a string or an Array
 	 *
 	 * @param mixed $data
-	 * @param int $depth
+	 * @param ?int $depth
 	 *
-	 * @return mixed|array
+	 * @return string|array
 	 */
 	public function normalize($data, ?int $depth = 0) {
 		$scalar = $this->normalizeScalar($data);
@@ -92,7 +87,6 @@ class Normalizer {
 		$decisionArray = [
 			'normalizeTraversable' => [$data, $depth],
 			'normalizeDate' => [$data],
-			'normalizeObject' => [$data, $depth],
 			'normalizeResource' => [$data],
 		];
 
@@ -232,40 +226,6 @@ class Normalizer {
 	private function normalizeDate($data): ?string {
 		if ($data instanceof \DateTimeInterface) {
 			return $data->format($this->dateFormat);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Converts an Object to an Array
-	 *
-	 * We don't convert to json here as we would double encode them
-	 *
-	 * @used-by Nextcloud\LogNormalizer\Normalizer::normalize
-	 *
-	 * @param mixed $data
-	 * @param int $depth
-	 *
-	 * @return mixed[]|string|null
-	 */
-	private function normalizeObject($data, int $depth) {
-		if (is_object($data)) {
-			if ($data instanceof Throwable) {
-				return $this->normalizeException($data);
-			}
-			// We don't need to go too deep in the recursion
-			$maxObjectRecursion = $this->maxRecursionDepth;
-			$arrayObject = new \ArrayObject($data);
-			$serializedObject = $arrayObject->getArrayCopy();
-			if ($depth < $maxObjectRecursion) {
-				$depth++;
-				$response = $this->normalize($serializedObject, $depth);
-
-				return [$this->getObjetName($data) => $response];
-			}
-
-			return $this->getObjetName($data);
 		}
 
 		return null;

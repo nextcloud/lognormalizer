@@ -9,7 +9,6 @@
     </PossiblyFalseOperand>
     <UnusedMethod>
       <code><![CDATA[normalizeDate]]></code>
-      <code><![CDATA[normalizeObject]]></code>
       <code><![CDATA[normalizeResource]]></code>
       <code><![CDATA[normalizeTraversable]]></code>
     </UnusedMethod>
