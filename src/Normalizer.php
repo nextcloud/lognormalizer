@@ -71,7 +71,7 @@ class Normalizer {
 			return $scalar;
 		}
 
-		if ($data instanceof \Throwable) {
+		if ($data instanceof Throwable) {
 			return $this->normalizeException($data, $depth);
 		}
 
