@@ -238,7 +238,7 @@ class Normalizer {
 	 *
 	 * @return mixed[]
 	 */
-	private function normalizeException(Throwable $exception): array {
+	private function normalizeException(Throwable $exception, int $depth): array {
 		$data = [
 			'class' => get_class($exception),
 			'message' => $exception->getMessage(),
@@ -250,7 +250,11 @@ class Normalizer {
 
 		$previous = $exception->getPrevious();
 		if ($previous) {
-			$data['previous'] = $this->normalizeException($previous);
+			if ($depth < $this->maxRecursionDepth) {
+				$data['previous'] = $this->normalizeException($previous, $depth + 1);
+			} else {
+				$data['previous'] = '[…]';
+			}
 		}
 
 		return $data;

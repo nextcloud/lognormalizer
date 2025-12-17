@@ -196,6 +196,53 @@ class NormalizerTest extends TestCase {
 		self::assertTrue(isset($normalized['exception']['previous']));
 	}
 
+	public function testFormatExceptionWithPreviousTruncated(): void {
+		$e = new TypeError('not a type error');
+		for ($i = 1; $i <= 5; $i++) {
+			$e = new Exception('an exception', $i, $e);
+		}
+
+		$normalized = $this->normalizer->normalize([
+			'exception' => $e,
+		]);
+
+		self::assertEquals(
+			[
+				'exception' => [
+					'class' => get_class($e),
+					'message' => $e->getMessage(),
+					'code' => 5,
+					'file' => $e->getFile() . ':' . $e->getLine(),
+					'trace' => $e->getTraceAsString(),
+					'previous' => [
+						'class' => get_class($e),
+						'message' => $e->getMessage(),
+						'code' => 4,
+						'file' => $e->getFile() . ':' . $e->getLine(),
+						'trace' => $e->getTraceAsString(),
+						'previous' => [
+							'class' => get_class($e),
+							'message' => $e->getMessage(),
+							'code' => 3,
+							'file' => $e->getFile() . ':' . $e->getLine(),
+							'trace' => $e->getTraceAsString(),
+							'previous' => [
+								'class' => get_class($e),
+								'message' => $e->getMessage(),
+								'code' => 2,
+								'file' => $e->getFile() . ':' . $e->getLine(),
+								'trace' => $e->getTraceAsString(),
+								'previous' => '[…]',
+							],
+						],
+					],
+				]
+			],
+			$normalized
+		);
+		self::assertTrue(isset($normalized['exception']['previous']));
+	}
+
 	public function testUnknown(): void {
 		$data = fopen('php://memory', 'rb');
 		fclose($data);
