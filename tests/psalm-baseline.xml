@@ -7,10 +7,5 @@
     <PossiblyFalseOperand>
       <code><![CDATA[substr((string)$data, 0, 40)]]></code>
     </PossiblyFalseOperand>
-    <UnusedMethod>
-      <code><![CDATA[normalizeDate]]></code>
-      <code><![CDATA[normalizeResource]]></code>
-      <code><![CDATA[normalizeTraversable]]></code>
-    </UnusedMethod>
   </file>
 </files>

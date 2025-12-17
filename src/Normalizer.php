@@ -80,21 +80,26 @@ class Normalizer {
 	 * @return string|array
 	 */
 	public function normalize($data, ?int $depth = 0) {
+		$depth = $depth ?? 0;
 		$scalar = $this->normalizeScalar($data);
 		if ($scalar !== null) {
 			return $scalar;
 		}
-		$decisionArray = [
-			'normalizeTraversable' => [$data, $depth],
-			'normalizeDate' => [$data],
-			'normalizeResource' => [$data],
-		];
 
-		foreach ($decisionArray as $functionName => $arguments) {
-			$dataType = call_user_func_array([$this, $functionName], $arguments);
-			if ($dataType !== null) {
-				return $dataType;
-			}
+		if ($data instanceof \Throwable) {
+			return $this->normalizeException($data, $depth);
+		}
+
+		if ($data instanceof \DateTimeInterface) {
+			return $data->format($this->dateFormat);
+		}
+
+		if (is_resource($data)) {
+			return '[resource] ' . substr((string)$data, 0, 40);
+		}
+
+		if (is_iterable($data)) {
+			return $this->normalizeTraversableElement($data, $depth);
 		}
 
 		return '[unknown(' . gettype($data) . ')]';
@@ -168,24 +173,6 @@ class Normalizer {
 	}
 
 	/**
-	 * Returns an array containing normalized elements
-	 *
-	 * @used-by Nextcloud\LogNormalizer\Normalizer::normalize
-	 *
-	 * @param mixed $data
-	 * @param int $depth
-	 *
-	 * @return array|null
-	 */
-	private function normalizeTraversable($data, int $depth = 0): ?array {
-		if (is_array($data) || $data instanceof \Traversable) {
-			return $this->normalizeTraversableElement($data, $depth);
-		}
-
-		return null;
-	}
-
-	/**
 	 * Converts each element of a traversable variable to String
 	 *
 	 * @param mixed $data
@@ -215,23 +202,6 @@ class Normalizer {
 	}
 
 	/**
-	 * Converts a date to String
-	 *
-	 * @used-by Nextcloud\LogNormalizer\Normalizer::normalize
-	 *
-	 * @param mixed $data
-	 *
-	 * @return null|string
-	 */
-	private function normalizeDate($data): ?string {
-		if ($data instanceof \DateTimeInterface) {
-			return $data->format($this->dateFormat);
-		}
-
-		return null;
-	}
-
-	/**
 	 * Converts an Exception to a string array
 	 *
 	 * @param Throwable $exception
@@ -258,33 +228,5 @@ class Normalizer {
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Formats the output of the object parsing
-	 *
-	 * @param object $object
-	 *
-	 * @return string
-	 */
-	private function getObjetName(object $object): string {
-		return sprintf('[object] (%s)', get_class($object));
-	}
-
-	/**
-	 * Converts a resource to a string
-	 *
-	 * @used-by Nextcloud\LogNormalizer\Normalizer::normalize
-	 *
-	 * @param resource|mixed $data
-	 *
-	 * @return string|null
-	 */
-	private function normalizeResource($data): ?string {
-		if (is_resource($data)) {
-			return '[resource] ' . substr((string)$data, 0, 40);
-		}
-
-		return null;
 	}
 }
