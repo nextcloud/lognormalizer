@@ -34,6 +34,13 @@ class NormalizerTest extends TestCase {
 		self::assertEquals("Don't underestimate the power of the string [+*%&]", $formatted);
 	}
 
+	public function testStringNullByte(): void {
+		$data = "Don't underestimate the\x00 power";
+		$formatted = $this->normalizer->format($data);
+
+		self::assertEquals("Don't underestimate the power", $formatted);
+	}
+
 	public function testEnumString(): void {
 		$data = TestEnumString::BAR;
 		$formatted = $this->normalizer->format($data);
