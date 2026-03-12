@@ -6,6 +6,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.0.1 – 2026-03-12
+* Filter invalid characters when not json encoding [#28](https://github.com/nextcloud/lognormalizer/pull/28)
+
 ## 3.0.0 – 2025-12-17
 * Support for PHP 8.5 added which required to remove support for generic objects
 * Support for PHP 8.0 and older has been dropped to allow supporting enums
