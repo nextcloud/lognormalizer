@@ -33,7 +33,7 @@
     "phpunit/phpunit": "^10.5",
     "nextcloud/coding-standard": "^1.4",
     "vimeo/psalm": "^6.15",
-    "symfony/polyfill-php85": "^1.33"
+    "symfony/polyfill-php85": "^1.37"
   },
   "autoload": {
     "psr-4": {
